@@ -10,19 +10,12 @@ import (
 	"time"
 )
 
-func getMaxElfCalories(filename string) int {
-	contentInByte, err := os.ReadFile(filename)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	elvesCaloriesArr := strings.Split(string(contentInByte), "\n\n")
+func getMaxElfCalories(contentInString string) int {
 
 	var resultList []int
 	var sum int = 0
 
-	start := time.Now()
+	elvesCaloriesArr := strings.Split(contentInString, "\n\n")
 	for _, elfCaloriesInString := range elvesCaloriesArr {
 		elfCaloriesArr := strings.Split(elfCaloriesInString, "\n")
 
@@ -41,16 +34,23 @@ func getMaxElfCalories(filename string) int {
 
 	sort.Sort(sort.Reverse(sort.IntSlice(resultList)))
 
-	timeElapsed := time.Since(start)
-
-	fmt.Printf("MY  SOLUTION IN GO %v\n", timeElapsed)
-
 	return resultList[0]
 }
 
 func main() {
+	start := time.Now()
 	// filename := "../sample.txt"
 	filename := "../input.txt"
-	result := getMaxElfCalories(filename)
-	fmt.Printf("The Elf carrying the most Calories has %v Calories.", result)
+
+	contentInByte, err := os.ReadFile(filename)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result := getMaxElfCalories(string(contentInByte))
+	fmt.Printf("The Elf carrying the most Calories has %v Calories.\n", result)
+
+	timeElapsed := time.Since(start)
+	fmt.Printf("MY  SOLUTION IN GO %v\n", timeElapsed)
 }
