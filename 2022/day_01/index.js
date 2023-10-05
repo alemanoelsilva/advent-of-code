@@ -1,7 +1,6 @@
 const fs = require("fs");
 
 function gtpSolution(elvesCalories) {
-  console.time("GTP SOLUTION");
   // Split the input into lines and initialize variables
   const lines = elvesCalories.split("\n");
   let currentElfCalories = 0;
@@ -29,21 +28,21 @@ function gtpSolution(elvesCalories) {
   if (currentElfCalories > maxElfCalories) {
     maxElfCalories = currentElfCalories;
   }
-  console.timeEnd("GTP SOLUTION");
 
   return maxElfCalories;
 }
 
 function mySolutions(input) {
-  console.time("MY  SOLUTION");
   const res = input
     .split("\n\n")
     .map((el) => el.split("\n").reduce((acc, el) => acc + parseInt(el, 10), 0))
     .sort((A, B) => (A <= B ? 1 : -1))[0];
 
-  console.timeEnd("MY  SOLUTION");
   return res;
 }
+
+console.time("MY  SOLUTION");
+console.time("GTP SOLUTION");
 
 const inputTxt = fs.readFileSync("./input.txt");
 
@@ -51,8 +50,11 @@ const maxCaloriesB = gtpSolution(inputTxt.toString());
 const maxCaloriesA = mySolutions(inputTxt.toString());
 
 console.log(
-  `[MY SOLUTION] -The Elf carrying the most Calories has ${maxCaloriesA} Calories.`
+  `[MY SOLUTION IN JS] -The Elf carrying the most Calories has ${maxCaloriesA} Calories.`
 );
+console.timeEnd("MY  SOLUTION");
+
 console.log(
-  `[GTP SOLUTION]-The Elf carrying the most Calories has ${maxCaloriesB} Calories.`
+  `[GTP SOLUTION IN JS]-The Elf carrying the most Calories has ${maxCaloriesB} Calories.`
 );
+console.timeEnd("GTP SOLUTION");
