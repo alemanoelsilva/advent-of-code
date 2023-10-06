@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func getMaxElfCalories(contentInString string) int {
+func getMaxElfCalories(contentInString string) (int, int) {
 
 	var resultList []int
 	var sum int = 0
@@ -34,7 +34,13 @@ func getMaxElfCalories(contentInString string) int {
 
 	sort.Sort(sort.Reverse(sort.IntSlice(resultList)))
 
-	return resultList[0]
+	elfWithMoreCalorie := resultList[0]
+	secondElf := resultList[1]
+	thirdElf := resultList[2]
+
+	threeElvesWithMoreCalories := elfWithMoreCalorie + secondElf + thirdElf
+
+	return elfWithMoreCalorie, threeElvesWithMoreCalories
 }
 
 func main() {
@@ -48,8 +54,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result := getMaxElfCalories(string(contentInByte))
-	fmt.Printf("The Elf carrying the most Calories has %v Calories.\n", result)
+	elfWithMoreCalorie, threeElvesWithMoreCalories := getMaxElfCalories(string(contentInByte))
+	fmt.Printf("The Elf carrying the most Calories has %v Calories.\n", elfWithMoreCalorie)
+	fmt.Printf("The top 3 Elves are carrying %v Calories.\n", threeElvesWithMoreCalories)
 
 	timeElapsed := time.Since(start)
 	fmt.Printf("MY  SOLUTION IN GO %v\n", timeElapsed)
