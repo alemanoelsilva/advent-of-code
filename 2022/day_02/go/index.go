@@ -72,13 +72,81 @@ func getMyPlayPoints(roundPlay string) int {
 	}
 }
 
-func getTotalPoints(contentInString string) int {
+func getRoundChoicePoint(roundPlay string) int {
+	switch roundPlay {
+	// Elf plays Rock | I need to lose
+	case "A X":
+		return SCISSOR_PLAY
+		// Elf plays Rock | I need to draw
+	case "A Y":
+		return ROCK_PLAY
+		// Elf plays Rock | I need to win
+	case "A Z":
+		return PAPER_PLAY
+		// Elf plays Paper | I need to lose
+	case "B X":
+		return ROCK_PLAY
+		// Elf plays Paper | I need to draw
+	case "B Y":
+		return PAPER_PLAY
+		// Elf plays Paper | I need to win
+	case "B Z":
+		return SCISSOR_PLAY
+		// Elf plays Scissor | I need to lose
+	case "C X":
+		return PAPER_PLAY
+		// Elf plays Scissor | I need to draw
+	case "C Y":
+		return SCISSOR_PLAY
+		// Elf plays Scissor | I need to win
+	case "C Z":
+		return ROCK_PLAY
+	default:
+		return 0
+	}
+}
+
+func getRoundResultPoint(roundPlay string) int {
+	plays := strings.Split(roundPlay, " ")
+
+	myPlay := plays[1]
+
+	switch myPlay {
+	// I will lose
+	case "X":
+		return LOST
+		// I will draw
+	case "Y":
+		return DRAW
+		// I will win
+	case "Z":
+		return WON
+	default:
+		return 0
+	}
+}
+
+func getTotalPointsOfRoundResult(contentInString string) int {
 	rounds := strings.Split(contentInString, "\n")
 
 	totalPoints := 0
 
 	for _, round := range rounds {
 		totalPoints = totalPoints + getRoundPoint(round) + getMyPlayPoints(round)
+	}
+
+	return totalPoints
+}
+
+func getTotalPointsOfChoiceResult(contentInString string) int {
+	rounds := strings.Split(contentInString, "\n")
+
+	totalPoints := 0
+
+	for _, round := range rounds {
+		choicePoints := getRoundChoicePoint(round)
+		roundResultPoints := getRoundResultPoint(round)
+		totalPoints = totalPoints + choicePoints + roundResultPoints
 	}
 
 	return totalPoints
@@ -95,8 +163,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	totalPoints := getTotalPoints(string(contentInByte))
-	fmt.Printf("The total points  %v.\n", totalPoints)
+	totalPointsOfRound := getTotalPointsOfRoundResult(string(contentInByte))
+	totalPointsOfChoice := getTotalPointsOfChoiceResult(string(contentInByte))
+	fmt.Printf("The total points of round  %v.\n", totalPointsOfRound)
+	fmt.Printf("The total points of choice %v.\n", totalPointsOfChoice)
 
 	timeElapsed := time.Since(start)
 	fmt.Printf("MY  SOLUTION IN GO %v\n", timeElapsed)

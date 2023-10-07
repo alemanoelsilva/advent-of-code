@@ -1,6 +1,5 @@
 const fs = require("fs");
 
-
 const ELF_PLAY = {
   ROCK: "A",
   PAPER: "B",
@@ -25,7 +24,7 @@ const PLAYED_POINTS = {
   [MY_PLAY["SCISSOR"]]: 3,
 };
 
-const checkRound = {
+const checkRoundResult = {
   [`${ELF_PLAY.ROCK} ${MY_PLAY.ROCK}`]: GAME_POINTS.DRAW,
   [`${ELF_PLAY.ROCK} ${MY_PLAY.PAPER}`]: GAME_POINTS.WON,
   [`${ELF_PLAY.ROCK} ${MY_PLAY.SCISSOR}`]: GAME_POINTS.LOST,
@@ -37,11 +36,48 @@ const checkRound = {
   [`${ELF_PLAY.SCISSOR} ${MY_PLAY.SCISSOR}`]: GAME_POINTS.DRAW,
 };
 
-function mySolutions(input) {
+const MY_CHOICE = {
+  LOSE: "X",
+  DRAW: "Y",
+  WIN: "Z",
+};
+
+const checkRoundChoice = {
+  [`${ELF_PLAY.ROCK} ${MY_CHOICE.LOSE}`]: PLAYED_POINTS[MY_PLAY["SCISSOR"]],
+  [`${ELF_PLAY.ROCK} ${MY_CHOICE.DRAW}`]: PLAYED_POINTS[MY_PLAY["ROCK"]],
+  [`${ELF_PLAY.ROCK} ${MY_CHOICE.WIN}`]: PLAYED_POINTS[MY_PLAY["PAPER"]],
+  [`${ELF_PLAY.PAPER} ${MY_CHOICE.LOSE}`]: PLAYED_POINTS[MY_PLAY["ROCK"]],
+  [`${ELF_PLAY.PAPER} ${MY_CHOICE.DRAW}`]: PLAYED_POINTS[MY_PLAY["PAPER"]],
+  [`${ELF_PLAY.PAPER} ${MY_CHOICE.WIN}`]: PLAYED_POINTS[MY_PLAY["SCISSOR"]],
+  [`${ELF_PLAY.SCISSOR} ${MY_CHOICE.LOSE}`]: PLAYED_POINTS[MY_PLAY["PAPER"]],
+  [`${ELF_PLAY.SCISSOR} ${MY_CHOICE.DRAW}`]: PLAYED_POINTS[MY_PLAY["SCISSOR"]],
+  [`${ELF_PLAY.SCISSOR} ${MY_CHOICE.WIN}`]: PLAYED_POINTS[MY_PLAY["ROCK"]],
+};
+
+const GAME_POINTS_BY_CHOICE = {
+  [MY_CHOICE.WIN]: GAME_POINTS.WON,
+  [MY_CHOICE.DRAW]: GAME_POINTS.DRAW,
+  [MY_CHOICE.LOSE]: GAME_POINTS.LOST,
+};
+
+function getTotalPointsOfRoundResult(input) {
   return input
     .split("\n")
     .reduce(
-      (acc, play) => acc + checkRound[play] + PLAYED_POINTS[play.split(" ")[1]],
+      (acc, play) =>
+        acc + checkRoundResult[play] + PLAYED_POINTS[play.split(" ")[1]],
+      0
+    );
+}
+
+function getTotalPointsOfChoiceResult(input) {
+  return input
+    .split("\n")
+    .reduce(
+      (acc, play) =>
+        acc +
+        checkRoundChoice[play] +
+        GAME_POINTS_BY_CHOICE[play.split(" ")[1]],
       0
     );
 }
@@ -50,8 +86,18 @@ console.time("MY  SOLUTION");
 
 const inputTxt = fs.readFileSync("../input.txt");
 
-const totalPoints = mySolutions(inputTxt.toString());
+const totalPointsOfRoundResult = getTotalPointsOfRoundResult(
+  inputTxt.toString()
+);
+const totalPointsOfChoiceResult = getTotalPointsOfChoiceResult(
+  inputTxt.toString()
+);
 
-console.log(`[MY SOLUTION IN JS] -The total points ${totalPoints}.`);
+console.log(
+  `[MY SOLUTION IN JS] -The total points of round  ${totalPointsOfRoundResult}.`
+);
+console.log(
+  `[MY SOLUTION IN JS] -The total points of choice ${totalPointsOfChoiceResult}.`
+);
 
 console.timeEnd("MY  SOLUTION");
