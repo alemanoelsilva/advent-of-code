@@ -1,6 +1,5 @@
 const fs = require("fs");
 
-console.time("MY  SOLUTION");
 
 const ELF_PLAY = {
   ROCK: "A",
@@ -47,7 +46,9 @@ function mySolutions(input) {
     );
 }
 
-const inputTxt = fs.readFileSync("./input.txt");
+console.time("MY  SOLUTION");
+
+const inputTxt = fs.readFileSync("../input.txt");
 
 const totalPoints = mySolutions(inputTxt.toString());
 
