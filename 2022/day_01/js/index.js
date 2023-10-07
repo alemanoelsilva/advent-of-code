@@ -47,7 +47,7 @@ function mySolutions(input) {
 console.time("MY  SOLUTION");
 console.time("GTP SOLUTION");
 
-const inputTxt = fs.readFileSync("./input.txt");
+const inputTxt = fs.readFileSync("../input.txt");
 
 const maxCaloriesB = gtpSolution(inputTxt.toString());
 const { firstElf, threeElves } = mySolutions(inputTxt.toString());
