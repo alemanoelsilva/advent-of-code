@@ -50,10 +50,6 @@ func countStartOfMessageMarker(input string) int {
 	start := input[0:13]
 	datastream := input[13:]
 
-	fmt.Printf("input |%v|\n", input)
-	fmt.Printf("start |%v|\n", start)
-	fmt.Printf("datastream |%v|\n", datastream)
-
 	for idx, data := range strings.Split(datastream, "") {
 		startArr := strings.Split(start, "")
 		startArr = append(startArr, data)
