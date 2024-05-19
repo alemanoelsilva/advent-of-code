@@ -102,6 +102,60 @@ func getTotalGamesId(lines []string) int {
 	return sum
 }
 
+func getTotalPowerCube(lines []string) int {
+	sum := 0
+
+	// Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+	for _, line := range lines {
+		lineAux := strings.Split(strings.Replace(line, "Game ", "", 1), ":")
+
+		redMin := 0
+		greenMin := 0
+		blueMin := 0
+
+		sets := strings.Split(lineAux[1], BREAK_SETS)
+
+		// [
+		//	"8 green, 6 blue, 20 red";
+		//	"5 blue, 4 red, 13 green";
+		//	"5 green, 1 red"
+		// ]
+		for _, set := range sets {
+			cubesLine := strings.Split(set, BREAK_CUBES)
+
+			//	["8 green", "6 blue", "20 red"]
+			for _, cube := range cubesLine {
+				if strings.Contains(cube, RED) {
+					red := getCubeValue(cube, RED)
+					if red > redMin {
+						redMin = red
+					}
+				}
+
+				if strings.Contains(cube, GREEN) {
+					green := getCubeValue(cube, GREEN)
+					if green > greenMin {
+						greenMin = green
+					}
+				}
+
+				if strings.Contains(cube, BLUE) {
+					blue := getCubeValue(cube, BLUE)
+					if blue > blueMin {
+						blueMin = blue
+					}
+				}
+			}
+
+		}
+
+		sum = sum + (redMin * greenMin * blueMin)
+
+	}
+
+	return sum
+}
+
 func main() {
 	start := time.Now()
 
@@ -113,28 +167,20 @@ func main() {
 	}
 
 	// filenamePart1 := "../sample_part_1.txt"
-	// filenamePart2 := "../sample_part_2.txt"
 	// filenamePart1 := "../input_part_1.txt"
-	// filenamePart2 := "../input_part_2.txt"
 
 	contentInBytePart1, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// contentInBytePart2, err := os.ReadFile(filenamePart2)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	lines := strings.Split(string(contentInBytePart1), "\n")
 
 	twoDigitNumberSumPart1 := getTotalGamesId(lines)
-	// twoDigitNumberSumPart2 := getTwoDigitNumberPart2(string(contentInBytePart2))
+	twoDigitNumberSumPart2 := getTotalPowerCube(lines)
 	fmt.Printf("What is the sum of the IDs of those games? - part 1: %v .\n", twoDigitNumberSumPart1)
-	// fmt.Printf("What is the sum of the IDs of those games? - part 2: %v .\n", twoDigitNumberSumPart2)
+	fmt.Printf("What is the sum of the IDs of those games? - part 2: %v .\n", twoDigitNumberSumPart2)
 
 	timeElapsed := time.Since(start)
 	fmt.Printf("MY  SOLUTION IN GO %v.\n", timeElapsed)
-	// fmt.Printf("MY  SOLUTION IN GO %v\n", timeElapsed)
 }

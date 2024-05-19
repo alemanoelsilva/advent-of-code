@@ -90,7 +90,7 @@ func processColor(color string, cubesLine []string, ch chan int) {
 	ch <- sum
 }
 
-func main() {
+func Main2() {
 	start := time.Now()
 
 	filename := "../sample_part_1.txt"
