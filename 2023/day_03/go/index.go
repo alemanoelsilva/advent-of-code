@@ -24,9 +24,7 @@ func isPartNumber(row, col int, grid [][]rune) bool {
 	for _, dir := range directions {
 		newRow, newCol := row+dir[0], col+dir[1]
 		if newRow >= 0 && newRow < len(grid) && newCol >= 0 && newCol < len(grid[0]) {
-
-			str := string(grid[newRow][newCol])
-			if !strings.Contains(NOT_SYMBOLS, str) {
+			if !strings.ContainsRune(NOT_SYMBOLS, grid[newRow][newCol]) {
 				return true
 			}
 		}
@@ -34,8 +32,8 @@ func isPartNumber(row, col int, grid [][]rune) bool {
 	return false
 }
 
-type Concat struct {
-	number       string
+type Number struct {
+	value        string
 	isPartNumber bool
 }
 
@@ -47,41 +45,44 @@ func getTotalEngineSchematic(lines []string) int {
 
 	// var sumNumber []int
 	sum := 0
+	number := Number{
+		value:        "",
+		isPartNumber: false,
+	}
 
 	for row, line := range lines {
-		concat := Concat{
-			number:       "",
-			isPartNumber: false,
-		}
-
 		for col, value := range strings.Split(line, "") {
 			_, err := strconv.Atoi(value)
+			// current character is not a number
 			if err != nil {
-				if concat.number != "" {
-					num, err := strconv.Atoi(concat.number)
-					if err == nil && concat.isPartNumber {
+				// if concatenated value is not empty
+				if number.value != "" {
+					num, err := strconv.Atoi(number.value)
+					if err == nil && number.isPartNumber {
 						// // sumNumber = append(sumNumber, num)
 						sum = sum + num
 					}
-					concat.number = ""
-					concat.isPartNumber = false
+					number.value = ""
+					number.isPartNumber = false
 				}
+				// current character is or is still a number
 			} else {
-				concat.number = concat.number + value
-				if !concat.isPartNumber {
-					concat.isPartNumber = isPartNumber(row, col, grid)
+				number.value = number.value + value
+				if !number.isPartNumber {
+					number.isPartNumber = isPartNumber(row, col, grid)
 				}
 
 				// last col of the line
 				if col == len(line)-1 {
-					if concat.number != "" {
-						num, err := strconv.Atoi(concat.number)
-						if err == nil && concat.isPartNumber {
+					// if concatenated value is not empty
+					if number.value != "" {
+						num, err := strconv.Atoi(number.value)
+						if err == nil && number.isPartNumber {
 							// // sumNumber = append(sumNumber, num)
 							sum = sum + num
 						}
-						concat.number = ""
-						concat.isPartNumber = false
+						number.value = ""
+						number.isPartNumber = false
 					}
 				}
 			}
